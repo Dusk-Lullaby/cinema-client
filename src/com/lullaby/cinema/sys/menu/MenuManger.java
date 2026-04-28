@@ -1,0 +1,90 @@
+package com.lullaby.cinema.sys.menu;
+
+import java.util.Arrays;
+
+/**
+ * 菜单管理器
+ */
+public class MenuManger {
+    /**
+     * 登录菜单
+     */
+    public static final Menu[] LOGIN_MENUS = {
+            new Menu(1, "注册", "register"),
+            new Menu(2, "登录", "login"),
+            new Menu(3, "找回密码", "getPasswordBack"),
+            new Menu(4, "解冻申请", "unfrozenApply"),
+            new Menu(5, "退出登录", "quit")
+    };
+    /**
+     * 普通用户菜单
+     */
+    public static final Menu[] USER_MENUS;
+    static {
+        Menu menu1 = new Menu(1, "我的订单", "showChildren");
+        menu1.addChild(new Menu(1, "查看订单", "getOrderList", menu1));
+        menu1.addChild(new Menu(2, "修改订单", "updateOrder", menu1));
+        menu1.addChild(new Menu(3, "取消订单", "cancerOrder", menu1));
+        menu1.addChild(new Menu(4, "返回主菜单", "goBackOrder", menu1));
+
+        Menu menu2 = new Menu(2, "购买影票", "showChildren");
+        menu2.addChild(new Menu(1, "查看播放计划", "getFilmPlanList", menu2));
+        menu2.addChild(new Menu(2, "在线订座", "orderSeatOnline", menu2));
+        menu2.addChild(new Menu(3, "返回主菜单", "goBackOrder", menu2));
+
+        Menu menu3 = new Menu(3, "返回登录", "goBackLogin");
+
+        USER_MENUS = new Menu[] {menu1, menu2, menu3};
+    }
+
+    /**
+     * 管理员菜单
+     */
+    public static final Menu[] MANAGER_MENUS;
+    static {
+        Menu menu1 = new Menu(1, "影片管理", "showChildren");
+        menu1.addChild(new Menu(1, "查看影片", "getFileList", menu1));
+        menu1.addChild(new Menu(2, "增加影片", "addFile", menu1));
+        menu1.addChild(new Menu(3, "修改影片", "updateFile", menu1));
+        menu1.addChild(new Menu(4, "删除影片", "deleteFile", menu1));
+        menu1.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu1));
+
+        Menu menu2 = new Menu(2, "影厅管理", "showChildren");
+        menu2.addChild(new Menu(1, "查看影厅", "getFileHallList", menu2));
+        menu2.addChild(new Menu(2, "增加影厅", "addFileHall", menu2));
+        menu2.addChild(new Menu(3, "修改影厅", "updateFileHall", menu2));
+        menu2.addChild(new Menu(4, "删除影厅", "deleteFileHall", menu2));
+        menu2.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu2));
+
+        Menu menu3 = new Menu(3, "播放计划管理", "showChildren");
+        menu3.addChild(new Menu(1, "查看播放计划", "getPlanHallList", menu3));
+        menu3.addChild(new Menu(2, "增加播放计划", "addPlanHall", menu3));
+        menu3.addChild(new Menu(3, "修改播放计划", "updatePlanHall", menu3));
+        menu3.addChild(new Menu(4, "删除播放计划", "deletePlanHall", menu3));
+        menu3.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu3));
+
+        Menu menu4 = new Menu(4, "用户管理", "showChildren");
+        menu4.addChild(new Menu(1, "查看用户", "getUserList", menu4));
+        menu4.addChild(new Menu(2, "冻结用户", "frozenUser", menu4));
+        menu4.addChild(new Menu(3, "解冻用户", "unfrozenUser", menu4));
+        menu4.addChild(new Menu(4, "查看解冻申请", "getUnfrozenApply", menu4));
+        menu4.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu4));
+
+        Menu menu5 = new Menu(5, "订单管理", "showChildren");
+        menu5.addChild(new Menu(1, "查看订单", "getOrderList", menu5));
+        menu5.addChild(new Menu(2, "审核订单", "auditOrder", menu5));
+        menu5.addChild(new Menu(3, "返回主菜单", "goBackOrder", menu5));
+
+        Menu menu6 = new Menu(6, "返回登录", "goBackLogin");
+
+        MANAGER_MENUS = new Menu[] {menu1, menu2, menu3, menu4, menu5, menu6};
+    }
+
+    /**
+     * 展示给定的菜单数组
+     * @param menus 菜单数组
+     */
+    public static void showMenu(Menu[] menus) {
+        Arrays.stream(menus).forEach(System.out::println);
+    }
+}
