@@ -28,7 +28,7 @@ public class Menu {
      */
     private Menu parent;
 
-    public Menu(int order, String action, String name) {
+    public Menu(int order, String name, String action) {
        this(order, name, action, null);
     }
 
@@ -50,5 +50,17 @@ public class Menu {
     @Override
     public String toString() {
         return order + "." + name;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public List<Menu> getChildren() {
+        return children;
+    }
+
+    public Menu getParent() {
+        return parent;
     }
 }
