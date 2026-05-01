@@ -5,7 +5,6 @@ import com.lullaby.cinema.sys.menu.Menu;
 import com.lullaby.cinema.sys.menu.MenuManger;
 import com.lullaby.cinema.sys.util.InputUtil;
 
-import java.awt.*;
 import java.util.List;
 
 /**

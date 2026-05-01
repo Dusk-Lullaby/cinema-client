@@ -1,5 +1,10 @@
 package com.lullaby.cinema.sys.action;
 
+import com.lullaby.cinema.sys.entity.User;
+import com.lullaby.cinema.sys.message.Message;
+import com.lullaby.cinema.sys.util.InputUtil;
+import com.lullaby.cinema.sys.util.SocketUtil;
+
 /**
  * 用户行为
  */
@@ -9,7 +14,19 @@ public class UserAction {
      * 注册
      */
     public static void register() {
-
+        String username = InputUtil.getInputText("请输入账号：");
+        String password = InputUtil.getInputText("请输入密码：");
+        String securityCode = InputUtil.getInputText("请输入安全码：");
+        User user = new User(username, password, securityCode);
+        Message<User> msg = new Message<>("register", user);
+        Integer result = SocketUtil.sendMessage(msg);
+        if (result != null && result == 1) {
+            System.out.println("注册成功");
+        } else if (result != null && result == -1) {
+            System.out.println("账号已被注册");
+        } else {
+            System.out.println("注册失败，请稍后重试");
+        }
     }
 
     /**
