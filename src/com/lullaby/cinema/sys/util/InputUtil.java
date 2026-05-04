@@ -55,7 +55,7 @@ public class InputUtil {
         while (true) {
             String dateStr = SCANNER.nextLine();
             try {
-                DateUtil.str2Date(dateStr);
+                return DateUtil.str2Date(dateStr);
             } catch (ParseException e) {
                 System.out.println("输入错误，请重新输入，日期格式为yyyy-MM-dd HH:mm:ss");
             }

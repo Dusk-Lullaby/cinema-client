@@ -57,17 +57,17 @@ public class MenuManger {
         menu2.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu2));
 
         Menu menu3 = new Menu(3, "播放计划管理", "showChildren");
-        menu3.addChild(new Menu(1, "查看播放计划", "getPlanHallList", menu3));
-        menu3.addChild(new Menu(2, "增加播放计划", "addPlanHall", menu3));
-        menu3.addChild(new Menu(3, "修改播放计划", "updatePlanHall", menu3));
-        menu3.addChild(new Menu(4, "删除播放计划", "deletePlanHall", menu3));
+        menu3.addChild(new Menu(1, "查看播放计划", "getFilmPlan", menu3));
+        menu3.addChild(new Menu(2, "增加播放计划", "addFilmPlan", menu3));
+        menu3.addChild(new Menu(3, "修改播放计划", "updateFilmPlan", menu3));
+        menu3.addChild(new Menu(4, "删除播放计划", "deleteFilmPlan", menu3));
         menu3.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu3));
 
         Menu menu4 = new Menu(4, "用户管理", "showChildren");
         menu4.addChild(new Menu(1, "查看用户", "getUserList", menu4));
         menu4.addChild(new Menu(2, "冻结用户", "frozenUser", menu4));
         menu4.addChild(new Menu(3, "解冻用户", "unfrozenUser", menu4));
-        menu4.addChild(new Menu(4, "查看解冻申请", "getUnfrozenApply", menu4));
+        menu4.addChild(new Menu(4, "查看解冻申请", "getUnfrozenApplyList", menu4));
         menu4.addChild(new Menu(5, "返回主菜单", "goBackOrder", menu4));
 
         Menu menu5 = new Menu(5, "订单管理", "showChildren");

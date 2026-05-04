@@ -2,6 +2,7 @@ package com.lullaby.cinema.sys.starter;
 
 import com.lullaby.cinema.sys.action.UserAction;
 import com.lullaby.cinema.sys.entity.FilmHall;
+import com.lullaby.cinema.sys.entity.User;
 import com.lullaby.cinema.sys.menu.Menu;
 import com.lullaby.cinema.sys.menu.MenuManger;
 import com.lullaby.cinema.sys.util.InputUtil;
@@ -138,6 +139,18 @@ public class CinemaClient {
             case "getFilmPlan": // 查看播放计划
                 UserAction.getFilmPlan();
                 showSameLevelMenu(select);
+                break;
+            case "getUserList": // 查看用户
+                UserAction.getUserList();
+                break;
+            case "frozenUser":  // 冻结用户
+                UserAction.frozenUser();
+                break;
+            case "unfrozenUser":    // 解冻用户
+                UserAction.unfrozenUser();
+                break;
+            case "getUnfrozenApplyList":    // 查看用户解冻申请
+                UserAction.getUnfrozenApplyList();
                 break;
             default:    // 其他子菜单操作，需要重新展示与该子菜单同级的菜单
                 showSameLevelMenu(select);

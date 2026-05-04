@@ -117,6 +117,6 @@ public class FilmHall implements Serializable {
 
     @Override
     public String toString() {
-        return id + "\t" + name + "\t" + totalRow  * totalCol;
+        return id + "\t" + name + "\t\t" + totalRow  * totalCol;
     }
 }
