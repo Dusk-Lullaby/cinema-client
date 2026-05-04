@@ -2,6 +2,7 @@ package com.lullaby.cinema.sys.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 菜单
@@ -62,5 +63,18 @@ public class Menu {
 
     public Menu getParent() {
         return parent;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Menu menu = (Menu) object;
+        return order == menu.order && Objects.equals(name, menu.name) && Objects.equals(action, menu.action) && Objects.equals(children, menu.children) && Objects.equals(parent, menu.parent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(order, name, action, children, parent);
     }
 }

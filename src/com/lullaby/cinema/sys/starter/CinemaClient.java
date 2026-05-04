@@ -1,6 +1,7 @@
 package com.lullaby.cinema.sys.starter;
 
 import com.lullaby.cinema.sys.action.UserAction;
+import com.lullaby.cinema.sys.entity.FilmHall;
 import com.lullaby.cinema.sys.menu.Menu;
 import com.lullaby.cinema.sys.menu.MenuManger;
 import com.lullaby.cinema.sys.util.InputUtil;
@@ -20,6 +21,7 @@ public class CinemaClient {
 //        Date date = InputUtil.getInputDate("请输入日期：");
 //        System.out.println(date);
         showInterface(MenuManger.LOGIN_MENUS);
+//        new FilmHall("", "", 10, 10).showSeats();
     }
 
     /**
@@ -28,7 +30,7 @@ public class CinemaClient {
      */
     public static void showInterface(Menu[] menus) {
         MenuManger.showMenu(menus);
-        int number = InputUtil.getInputInteger("请选择菜单编号", 1, MenuManger.LOGIN_MENUS.length);
+        int number = InputUtil.getInputInteger("请选择菜单编号", 1, menus.length);
         Menu select = menus[number - 1];
         switch (select.getAction()) {
             case "login":
@@ -76,26 +78,65 @@ public class CinemaClient {
                 Menu[] childrenMenus = children.toArray(new Menu[children.size()]);
                 showInterface(childrenMenus);
                 break;
-            case "goBackLogin":
+            case "goBackLogin": // 返回登录
                 showInterface(MenuManger.LOGIN_MENUS);
                 break;
-            case "goBackOrder":
-                showInterface(MenuManger.USER_MENUS);
+            case "goBackOrder": // 返回主菜单
+                boolean isManager = false;
+                Menu parent = select.getParent();
+                for (Menu menu : MenuManger.MANAGER_MENUS) {
+                    if (menu.equals(parent)) {
+                        isManager = true;
+                    }
+                }
+                showInterface(isManager ? MenuManger.MANAGER_MENUS : MenuManger.USER_MENUS);
                 break;
-            case "addFile": // 增加影片
+            case "addFilm": // 增加影片
                 UserAction.addFilm();
                 showSameLevelMenu(select);
                 break;
-            case "updateFile": // 修改影片
+            case "updateFilm": // 修改影片
                 UserAction.updateFilm();
                 showSameLevelMenu(select);
                 break;
-            case "deleteFile": // 删除影片
+            case "deleteFilm": // 删除影片
                 UserAction.deleteFilm();
                 showSameLevelMenu(select);
                 break;
             case "getFilmList": // 查看影片
                 UserAction.getFilmList();
+                showSameLevelMenu(select);
+                break;
+            case "addFilmHall": // 增加影厅
+                UserAction.addFilmHall();
+                showSameLevelMenu(select);
+                break;
+            case "updateFilmHall": // 修改影厅
+                UserAction.updateFilmHall();
+                showSameLevelMenu(select);
+                break;
+            case "deleteFilmHall": // 删除影厅
+                UserAction.deleteFilmHall();
+                showSameLevelMenu(select);
+                break;
+            case "getFilmHallList": // 查看影厅
+                UserAction.getFilmHallList();
+                showSameLevelMenu(select);
+                break;
+            case "addFilmPlan": // 增加播放计划
+                UserAction.addFilmPlan();
+                showSameLevelMenu(select);
+                break;
+            case "updateFilmPlan": // 修改播放计划
+                UserAction.updateFilmPlan();
+                showSameLevelMenu(select);
+                break;
+            case "deleteFilmPlan": // 删除播放计划
+                UserAction.deleteFilmPlan();
+                showSameLevelMenu(select);
+                break;
+            case "getFilmPlan": // 查看播放计划
+                UserAction.getFilmPlan();
                 showSameLevelMenu(select);
                 break;
             default:    // 其他子菜单操作，需要重新展示与该子菜单同级的菜单
