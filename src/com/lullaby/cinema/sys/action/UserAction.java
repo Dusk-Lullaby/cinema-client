@@ -6,10 +6,7 @@ import com.lullaby.cinema.sys.util.IdGenerator;
 import com.lullaby.cinema.sys.util.InputUtil;
 import com.lullaby.cinema.sys.util.SocketUtil;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 用户行为
@@ -92,7 +89,80 @@ public class UserAction {
      * 查看订单
      */
     public static void getOrderList() {
+        Message<String> message = new Message<>("getOrderList", null);
+        List<Order> orders = SocketUtil.sendMessage(message);
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("当前并无订单信息");
+        } else {
+            System.out.println("订单编号\t\t\t影片名称\t开始时间\t\t\t\t结束时间\t\t\t\t座位信息\t订单状态\t所属用户");
+            orders.forEach(System.out::println);
+        }
+    }
 
+    /**
+     * 在线订座
+     * @param currentUsername 用户名
+     */
+    public static void orderSeatOnline(String currentUsername) {
+        Message<String> message = new Message<>("getFilmPlan", null);
+        List<FilmPlan> filmPlans = SocketUtil.sendMessage(message);
+        if (filmPlans == null || filmPlans.isEmpty()) {
+            System.out.println("暂无影票售卖");
+        } else {
+            System.out.println("播放计划编号\t\t\t影片名称\t影片描述\t影厅名称\t开始时间\t\t\t\t结束时间\t\t\t\t余票");
+            filmPlans.forEach(System.out::println);
+            while (true) {
+                String planId = InputUtil.getInputText("请输入播放计划编号");
+                Optional<FilmPlan> optionalFilmPlan = filmPlans.stream().filter(filmPlan -> filmPlan.getId().equals(planId)).findFirst();
+                if (optionalFilmPlan.isPresent()) {
+                    FilmPlan plan = optionalFilmPlan.get();
+                    FilmHall hall = plan.getFilmHall();
+                    if (hall.getRestTicket() > 0) {
+                        hall.showSeats();
+                        while (true) {
+                            int row = InputUtil.getInputInteger("请选择排号", 0, hall.getTotalRow() - 1);
+                            int col = InputUtil.getInputInteger("请选择列号", 0, hall.getTotalCol() - 1);
+                            if (hall.hasOwner(row, col)) {  // 如果座位已经售卖
+                                System.out.println("座位：第" + row + "第" + col + "列已经售卖，请重新选择");
+                            } else {
+                                Map<String, Object> data = new HashMap<>();
+                                data.put("planId", planId);
+                                data.put("row", row);
+                                data.put("col", col);
+                                data.put("username", currentUsername);
+                                Message<Map<String, Object>> mapMessage = new Message<>("orderSeatOnline", data);
+                                Integer result = SocketUtil.sendMessage(mapMessage);
+                                if (result == null || result == 0) {
+                                    System.out.println("座位订购失败，请稍后重试");
+                                } else {
+                                    System.out.println("座位订购成功");
+                                }
+                                break;
+                            }
+                        }
+                    } else {
+                        System.out.println("当前影票已经售完");
+                    }
+                    break;
+                } else {
+                    System.out.println("播放计划编号输入有误，请重新输入");
+                }
+            }
+        }
+    }
+
+    /**
+     * 查看用户订单
+     */
+    public static void getUserOrderList(String username) {
+        Message<String> message = new Message<>("getUserOrderList", username);
+        List<Order> orders = SocketUtil.sendMessage(message);
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("当前并无订单信息");
+        } else {
+            System.out.println("订单编号\t\t\t影片名称\t开始时间\t\t\t\t结束时间\t\t\t\t座位信息\t订单状态\t所属用户");
+            orders.forEach(System.out::println);
+        }
     }
 
     /**
@@ -106,14 +176,46 @@ public class UserAction {
      * 取消订单
      */
     public static void cancelOrder() {
-
+        String orderId = InputUtil.getInputText("请输入订单编号");
+        Message<String> message = new Message<>("cancelOrder", orderId);
+        Integer result = SocketUtil.sendMessage(message);
+        if (result == null || result == 0) {
+            System.out.println("订单取消失败，请稍后重试");
+        } else if (result == 1) {
+            System.out.println("订单取消中");
+        } else if (result == -1){
+            System.out.println("未找到与\"" + orderId + "\"相关订单信息");
+        } else {
+            System.out.println("订单正在取消中或已经退订，无需再取消");
+        }
     }
 
     /**
      * 审核订单
      */
     public static void auditOrder() {
-
+        Message<Integer> message = new Message<>("getOrderList", 0);
+        List<Order> orders = SocketUtil.sendMessage(message);
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("当前并无可审核订单");
+        } else {
+            while (true) {
+                String orderId = InputUtil.getInputText("请输入订单编号");
+                boolean exists = orders.stream().anyMatch(order -> order.getId().equals(orderId));
+                if (exists) {
+                    Message<String> msg = new Message<>("auditOrder", orderId);
+                    Integer result = SocketUtil.sendMessage(msg);
+                    if (result == null || result == 0) {
+                        System.out.println("审核失败，请稍后重试");
+                    } else {
+                        System.out.println("审核成功");
+                    }
+                    break;
+                } else {
+                    System.out.println("订单编号输入有误");
+                }
+            }
+        }
     }
 
     /**
@@ -361,27 +463,75 @@ public class UserAction {
      * 查看用户
      */
     public static void getUserList() {
-
+        Message<String> message = new Message<>("getUserList", null);
+        List<User> users = SocketUtil.sendMessage(message);
+        if (users == null || users.isEmpty()) {
+            System.out.println("当前无可展示信息");
+        } else {
+            System.out.println("账号\t\t角色\t状态");
+            users.forEach(System.out::println);
+        }
     }
 
     /**
      * 冻结用户
      */
     public static void frozenUser() {
-
+        String name = InputUtil.getInputText("请输入冻结账号");
+        Message<String> msg = new Message<>("frozenUser", name);
+        Integer result = SocketUtil.sendMessage(msg);
+        if (result == null || result == 0) {
+            System.out.println("冻结失败，请稍后重试");
+        } else if (result == 1) {
+            System.out.println("冻结成功");
+        } else if (result == -1){
+            System.out.println("未找到与\"" + name + "\"相关的用户信息");
+        } else {
+            System.out.println("账号\"" + name  + "\"已经被冻结，无需再冻结");
+        }
     }
 
     /**
      * 解冻用户
      */
     public static void unfrozenUser() {
-
+        Message<String> message = new Message<>("getUnfrozenApplyList", null);
+        List<UnfrozenApply> unfrozenApplies = SocketUtil.sendMessage(message);
+        if (unfrozenApplies == null || unfrozenApplies.isEmpty()) {
+            System.out.println("当前无可展示解冻申请信息");
+        } else {
+            System.out.println("编号\t冻结账号\t\t原因\t状态");
+            unfrozenApplies.forEach(System.out::println);
+            String id = InputUtil.getInputText("请输入解冻申请编号");
+            int number = InputUtil.getInputInteger("请输入解冻状态", 1, 2);
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            map.put("number", number);
+            Message<Map<String, Object>> msg = new Message<>("unfrozenUser", map);
+            Integer result = SocketUtil.sendMessage(msg);
+            if (result == null || result == 0) {
+                System.out.println("解冻失败，请稍后重试");
+            } else if (result == 1) {
+                System.out.println("解冻成功");
+            } else if (result == -1){
+                System.out.println("该解冻申请已处理，无需再次处理");
+            } else {
+                System.out.println("未找到\"" + id + "\"相关的解冻申请");
+            }
+        }
     }
 
     /**
      * 查看解冻申请
      */
     public static void getUnfrozenApplyList() {
-
+        Message<String> message = new Message<>("getUnfrozenApplyList", null);
+        List<UnfrozenApply> unfrozenApplies = SocketUtil.sendMessage(message);
+        if (unfrozenApplies == null || unfrozenApplies.isEmpty()) {
+            System.out.println("当前无可展示解冻申请信息");
+        } else {
+            System.out.println("编号\t冻结账号\t\t原因\t状态");
+            unfrozenApplies.forEach(System.out::println);
+        }
     }
  }

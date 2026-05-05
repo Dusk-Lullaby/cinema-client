@@ -22,13 +22,13 @@ public class MenuManger {
     public static final Menu[] USER_MENUS;
     static {
         Menu menu1 = new Menu(1, "我的订单", "showChildren");
-        menu1.addChild(new Menu(1, "查看订单", "getOrderList", menu1));
+        menu1.addChild(new Menu(1, "查看订单", "getUserOrderList", menu1));
         menu1.addChild(new Menu(2, "修改订单", "updateOrder", menu1));
-        menu1.addChild(new Menu(3, "取消订单", "cancerOrder", menu1));
+        menu1.addChild(new Menu(3, "取消订单", "cancelOrder", menu1));
         menu1.addChild(new Menu(4, "返回主菜单", "goBackOrder", menu1));
 
         Menu menu2 = new Menu(2, "购买影票", "showChildren");
-        menu2.addChild(new Menu(1, "查看播放计划", "getFilmPlanList", menu2));
+        menu2.addChild(new Menu(1, "查看播放计划", "getFilmPlan", menu2));
         menu2.addChild(new Menu(2, "在线订座", "orderSeatOnline", menu2));
         menu2.addChild(new Menu(3, "返回主菜单", "goBackOrder", menu2));
 

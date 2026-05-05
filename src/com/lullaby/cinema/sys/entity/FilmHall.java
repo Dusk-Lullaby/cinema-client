@@ -1,6 +1,7 @@
 package com.lullaby.cinema.sys.entity;
 
 import java.io.Serializable;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  * 影厅
@@ -113,6 +114,26 @@ public class FilmHall implements Serializable {
             }
         }
         return total;
+    }
+
+    /**
+     * 给定排号和列号的座位是否已经售卖
+     * @param row 行号
+     * @param col 列号
+     * @return 已经售卖返回true，未售卖返回false
+     */
+    public boolean hasOwner(int row, int col) {
+        return seats[row][col].getOwner() != null;
+    }
+
+    /**
+     * 给定排号和列号的座位设定用户
+     * @param row 排号
+     * @param col 列号
+     * @param username 用户
+     */
+    public void setOwners(int row, int col, String username) {
+        seats[row][col].setOwner(username);
     }
 
     @Override

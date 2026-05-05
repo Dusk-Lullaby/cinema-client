@@ -1,11 +1,14 @@
 package com.lullaby.cinema.sys.entity;
 
+import com.lullaby.cinema.sys.util.DateUtil;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 订单
  */
-public class Order {
+public class Order implements Serializable {
     /**
      * 编号
      */
@@ -34,4 +37,77 @@ public class Order {
      * 拥有者
      */
     private String owner;
+
+    public Order(String id, String fileName, Date begin, Date end, String seatInfo, int state, String owner) {
+        this.id = id;
+        this.fileName = fileName;
+        this.begin = begin;
+        this.end = end;
+        this.seatInfo = seatInfo;
+        this.state = state;
+        this.owner = owner;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Date getBegin() {
+        return begin;
+    }
+
+    public void setBegin(Date begin) {
+        this.begin = begin;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public String getSeatInfo() {
+        return seatInfo;
+    }
+
+    public void setSeatInfo(String seatInfo) {
+        this.seatInfo = seatInfo;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        String stateStr = state == 0 ? "退订中" : state == 1 ? "正常" : "已退订";
+        return id + "\t" + fileName + "\t" + DateUtil.date2str(begin) + "\t" + DateUtil.date2str(end) + "\t" +
+                seatInfo + "\t" + stateStr + "\t" + owner;
+    }
 }

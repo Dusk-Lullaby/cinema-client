@@ -1,7 +1,6 @@
 package com.lullaby.cinema.sys.starter;
 
 import com.lullaby.cinema.sys.action.UserAction;
-import com.lullaby.cinema.sys.entity.FilmHall;
 import com.lullaby.cinema.sys.entity.User;
 import com.lullaby.cinema.sys.menu.Menu;
 import com.lullaby.cinema.sys.menu.MenuManger;
@@ -14,6 +13,10 @@ import java.util.Map;
  * 影院客户端
  */
 public class CinemaClient {
+    /**
+     * 当前登录用户
+     */
+    public static User currentUser;
 
     public static void main(String[] args) {
 //        MenuManger.showMenu(MenuManger.LOGIN_MENUS);
@@ -42,7 +45,8 @@ public class CinemaClient {
                 } else {
                     int process = (int) result.get("process");
                     if (process == 1) { // 登录成功
-                        boolean isManager = (boolean) result.get("manager");
+                        currentUser = (User) result.get("user");
+                        boolean isManager = currentUser.isManager();
                         Menu[] mainMenus = isManager ? MenuManger.MANAGER_MENUS : MenuManger.USER_MENUS;
                         showInterface(mainMenus);
                     } else {
@@ -83,14 +87,7 @@ public class CinemaClient {
                 showInterface(MenuManger.LOGIN_MENUS);
                 break;
             case "goBackOrder": // 返回主菜单
-                boolean isManager = false;
-                Menu parent = select.getParent();
-                for (Menu menu : MenuManger.MANAGER_MENUS) {
-                    if (menu.equals(parent)) {
-                        isManager = true;
-                    }
-                }
-                showInterface(isManager ? MenuManger.MANAGER_MENUS : MenuManger.USER_MENUS);
+                showInterface(currentUser.isManager() ? MenuManger.MANAGER_MENUS : MenuManger.USER_MENUS);
                 break;
             case "addFilm": // 增加影片
                 UserAction.addFilm();
@@ -142,16 +139,42 @@ public class CinemaClient {
                 break;
             case "getUserList": // 查看用户
                 UserAction.getUserList();
+                showSameLevelMenu(select);
                 break;
             case "frozenUser":  // 冻结用户
                 UserAction.frozenUser();
+                showSameLevelMenu(select);
                 break;
             case "unfrozenUser":    // 解冻用户
                 UserAction.unfrozenUser();
+                showSameLevelMenu(select);
                 break;
             case "getUnfrozenApplyList":    // 查看用户解冻申请
                 UserAction.getUnfrozenApplyList();
+                showSameLevelMenu(select);
                 break;
+            case "getOrderList":    // 查看订单
+                UserAction.getOrderList();
+                showSameLevelMenu(select);
+                break;
+            case "getUserOrderList":    // 查看用户订单
+                UserAction.getUserOrderList(currentUser.getUsername());
+                showSameLevelMenu(select);
+                break;
+            case "updateOrder":    // 修改订单
+                UserAction.updateOrder();
+                showSameLevelMenu(select);
+                break;
+            case "cancelOrder":    // 取消订单
+                UserAction.cancelOrder();
+                showSameLevelMenu(select);
+                break;
+            case "auditOrder":    // 审核订单
+                UserAction.auditOrder();
+                showSameLevelMenu(select);
+                break;
+            case "orderSeatOnline": // 在线订座
+                UserAction.orderSeatOnline(currentUser.getUsername());
             default:    // 其他子菜单操作，需要重新展示与该子菜单同级的菜单
                 showSameLevelMenu(select);
         }
